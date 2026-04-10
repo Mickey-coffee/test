@@ -35,6 +35,8 @@ python -m src.main ranking data/university_rankings.json
 
 生成された動画は `output/` ディレクトリに保存されます。
 
+配布用の成果物は `dist/` にコミットしています。`dist/university_rankings.mp4` を GitHub からダウンロードできます。
+
 ## スクリプトフォーマット
 
 - シーン動画: `scripts/sample_script.json` を参照。各シーンに画像・キャプション・表示時間を指定。
