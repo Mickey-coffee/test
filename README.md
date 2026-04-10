@@ -21,21 +21,31 @@ pip install -r requirements.txt
 
 ## 使い方
 
+シーンベースの動画:
+
 ```bash
-python -m src.main scripts/sample_script.json
+python -m src.main scene scripts/sample_script.json
+```
+
+大学ランキング推移動画:
+
+```bash
+python -m src.main ranking data/university_rankings.json
 ```
 
 生成された動画は `output/` ディレクトリに保存されます。
 
 ## スクリプトフォーマット
 
-`scripts/sample_script.json` を参照してください。各シーンに画像、キャプション、表示時間を指定できます。
+- シーン動画: `scripts/sample_script.json` を参照。各シーンに画像・キャプション・表示時間を指定。
+- ランキング動画: `data/university_rankings.json` を参照。年ごとのランキング (rank, name) を並べる。
 
 ## ディレクトリ構成
 
 ```
 .
 ├── assets/         # 画像・音声素材
+├── data/           # ランキングなどデータ JSON
 ├── output/         # 生成された動画
 ├── scripts/        # 動画構成 JSON
 └── src/            # ソースコード

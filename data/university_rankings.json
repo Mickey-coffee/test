@@ -1,0 +1,82 @@
+{
+  "title": "World University Rankings 2020-2024",
+  "subtitle": "Top 10 (Illustrative sample data)",
+  "duration_per_year": 2.5,
+  "years": [
+    {
+      "year": 2020,
+      "rankings": [
+        {"rank": 1, "name": "MIT"},
+        {"rank": 2, "name": "Stanford"},
+        {"rank": 3, "name": "Harvard"},
+        {"rank": 4, "name": "Oxford"},
+        {"rank": 5, "name": "Caltech"},
+        {"rank": 6, "name": "ETH Zurich"},
+        {"rank": 7, "name": "Cambridge"},
+        {"rank": 8, "name": "UCL"},
+        {"rank": 9, "name": "Imperial"},
+        {"rank": 10, "name": "Chicago"}
+      ]
+    },
+    {
+      "year": 2021,
+      "rankings": [
+        {"rank": 1, "name": "MIT"},
+        {"rank": 2, "name": "Oxford"},
+        {"rank": 3, "name": "Stanford"},
+        {"rank": 4, "name": "Cambridge"},
+        {"rank": 5, "name": "Harvard"},
+        {"rank": 6, "name": "Caltech"},
+        {"rank": 7, "name": "Imperial"},
+        {"rank": 8, "name": "ETH Zurich"},
+        {"rank": 9, "name": "UCL"},
+        {"rank": 10, "name": "Chicago"}
+      ]
+    },
+    {
+      "year": 2022,
+      "rankings": [
+        {"rank": 1, "name": "Oxford"},
+        {"rank": 2, "name": "MIT"},
+        {"rank": 3, "name": "Cambridge"},
+        {"rank": 4, "name": "Stanford"},
+        {"rank": 5, "name": "Harvard"},
+        {"rank": 6, "name": "Caltech"},
+        {"rank": 7, "name": "ETH Zurich"},
+        {"rank": 8, "name": "Imperial"},
+        {"rank": 9, "name": "UCL"},
+        {"rank": 10, "name": "Princeton"}
+      ]
+    },
+    {
+      "year": 2023,
+      "rankings": [
+        {"rank": 1, "name": "MIT"},
+        {"rank": 2, "name": "Cambridge"},
+        {"rank": 3, "name": "Oxford"},
+        {"rank": 4, "name": "Harvard"},
+        {"rank": 5, "name": "Stanford"},
+        {"rank": 6, "name": "Imperial"},
+        {"rank": 7, "name": "ETH Zurich"},
+        {"rank": 8, "name": "NUS"},
+        {"rank": 9, "name": "UCL"},
+        {"rank": 10, "name": "Caltech"}
+      ]
+    },
+    {
+      "year": 2024,
+      "rankings": [
+        {"rank": 1, "name": "MIT"},
+        {"rank": 2, "name": "Cambridge"},
+        {"rank": 3, "name": "Oxford"},
+        {"rank": 4, "name": "Harvard"},
+        {"rank": 5, "name": "Stanford"},
+        {"rank": 6, "name": "Imperial"},
+        {"rank": 7, "name": "ETH Zurich"},
+        {"rank": 8, "name": "NUS"},
+        {"rank": 9, "name": "UCL"},
+        {"rank": 10, "name": "Caltech"}
+      ]
+    }
+  ]
+}

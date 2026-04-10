@@ -1,18 +1,19 @@
-"""ショート動画生成の中心ロジック."""
+"""ショート動画生成の中心ロジック (シーンベース)."""
 from __future__ import annotations
 
 import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from moviepy.editor import (
+import numpy as np
+from moviepy import (
     AudioFileClip,
     ColorClip,
     CompositeVideoClip,
     ImageClip,
-    TextClip,
     concatenate_videoclips,
 )
+from PIL import Image, ImageDraw, ImageFont
 
 from .config import ASSETS_DIR, DEFAULT_CONFIG, OUTPUT_DIR, VideoConfig
 
@@ -52,6 +53,46 @@ class VideoScript:
         )
 
 
+def _load_font(size: int) -> ImageFont.FreeTypeFont:
+    """システムにある標準フォントをロードする."""
+    candidates = [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/System/Library/Fonts/Helvetica.ttc",
+    ]
+    for path in candidates:
+        if Path(path).exists():
+            return ImageFont.truetype(path, size)
+    return ImageFont.load_default()
+
+
+def _render_caption_overlay(
+    caption: str, width: int, height: int, font_size: int
+) -> np.ndarray:
+    """キャプションを透明背景の画像として PIL で描画する."""
+    img = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    font = _load_font(font_size)
+
+    lines = caption.split("\n")
+    line_heights = []
+    line_widths = []
+    for line in lines:
+        bbox = draw.textbbox((0, 0), line, font=font)
+        line_widths.append(bbox[2] - bbox[0])
+        line_heights.append(bbox[3] - bbox[1])
+    total_h = sum(line_heights) + (len(lines) - 1) * 10
+    y = int(height * 0.78) - total_h // 2
+    for line, lw, lh in zip(lines, line_widths, line_heights):
+        x = (width - lw) // 2
+        # 軽い縁取り
+        for dx, dy in [(-2, 0), (2, 0), (0, -2), (0, 2)]:
+            draw.text((x + dx, y + dy), line, font=font, fill=(0, 0, 0, 255))
+        draw.text((x, y), line, font=font, fill=(255, 255, 255, 255))
+        y += lh + 10
+    return np.array(img)
+
+
 class ShortVideoGenerator:
     """JSON スクリプトから縦型ショート動画を生成する."""
 
@@ -64,26 +105,26 @@ class ShortVideoGenerator:
 
         if scene.image:
             image_path = ASSETS_DIR / "images" / scene.image
-            clip = (
-                ImageClip(str(image_path))
-                .set_duration(scene.duration)
-                .resize(height=cfg.height)
-                .on_color(size=size, color=cfg.bg_color, pos=("center", "center"))
+            pil_img = Image.open(image_path).convert("RGB")
+            pil_img.thumbnail((cfg.width, cfg.height), Image.LANCZOS)
+            canvas = Image.new("RGB", size, cfg.bg_color)
+            offset = (
+                (cfg.width - pil_img.width) // 2,
+                (cfg.height - pil_img.height) // 2,
             )
+            canvas.paste(pil_img, offset)
+            clip = ImageClip(np.array(canvas)).with_duration(scene.duration)
         else:
-            clip = ColorClip(size=size, color=cfg.bg_color, duration=scene.duration)
+            clip = ColorClip(
+                size=size, color=cfg.bg_color, duration=scene.duration
+            )
 
         if scene.caption:
-            text = TextClip(
-                scene.caption,
-                fontsize=cfg.font_size,
-                color=cfg.text_color,
-                font=cfg.font,
-                method="caption",
-                size=(cfg.width - 120, None),
-                align="center",
-            ).set_duration(scene.duration).set_position(("center", cfg.height * 0.78))
-            clip = CompositeVideoClip([clip, text], size=size)
+            overlay = _render_caption_overlay(
+                scene.caption, cfg.width, cfg.height, cfg.font_size
+            )
+            text_clip = ImageClip(overlay).with_duration(scene.duration)
+            clip = CompositeVideoClip([clip, text_clip], size=size)
 
         return clip
 
@@ -93,15 +134,14 @@ class ShortVideoGenerator:
 
         if script.bgm:
             bgm_path = ASSETS_DIR / "audio" / script.bgm
-            audio = AudioFileClip(str(bgm_path)).subclip(0, video.duration)
-            video = video.set_audio(audio)
+            audio = AudioFileClip(str(bgm_path)).subclipped(0, video.duration)
+            video = video.with_audio(audio)
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
         video.write_videofile(
             str(output_path),
             fps=self.config.fps,
             codec=self.config.codec,
-            audio_codec=self.config.audio_codec,
         )
         return output_path
 
