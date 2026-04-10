@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Output
+output/*.mp4
+output/*.mov
+
+# Assets (keep structure, not content)
+assets/images/*
+assets/audio/*
+!assets/**/.gitkeep
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store

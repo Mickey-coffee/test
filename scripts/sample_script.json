@@ -1,0 +1,18 @@
+{
+  "title": "sample_short",
+  "bgm": null,
+  "scenes": [
+    {
+      "duration": 2.5,
+      "caption": "こんにちは\nショート動画へようこそ"
+    },
+    {
+      "duration": 3.0,
+      "caption": "JSON を書くだけで\n動画が作れます"
+    },
+    {
+      "duration": 2.0,
+      "caption": "Let's get started!"
+    }
+  ]
+}
